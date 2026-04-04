@@ -1,0 +1,312 @@
+{
+  "@context": "http://www.w3.org/ns/odrl.jsonld",
+  "engine_policies": [
+
+    {
+      "uid": "doctor_policy_1",
+      "scenario": "Doctor reads patient records for treatment when consent is active",
+      "role": "doctor",
+      "target": "patient_records",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "purpose", "operator": "eq", "rightOperand": "treatment"},
+        {"leftOperand": "consent_status", "operator": "eq", "rightOperand": "active"}
+      ],
+      "duties": [
+        {"action": "log_access"}
+      ]
+    },
+
+    {
+      "uid": "doctor_policy_2",
+      "scenario": "Doctor denied access if patient consent revoked",
+      "role": "doctor",
+      "target": "patient_records",
+      "action": "read",
+      "effect": "deny",
+      "constraints": [
+        {"leftOperand": "consent_status", "operator": "eq", "rightOperand": "revoked"}
+      ]
+    },
+
+    {
+      "uid": "doctor_policy_3",
+      "scenario": "Doctor exports anonymised data for research",
+      "role": "doctor",
+      "target": "research_dataset",
+      "action": "export",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "purpose", "operator": "eq", "rightOperand": "medical_research"},
+        {"leftOperand": "anonymised", "operator": "eq", "rightOperand": true}
+      ],
+      "duties": [
+        {"action": "log_access"},
+        {"action": "watermark_export"}
+      ]
+    },
+
+    {
+      "uid": "doctor_policy_4",
+      "scenario": "Doctor cannot share raw patient records externally",
+      "role": "doctor",
+      "target": "patient_records",
+      "action": "share",
+      "effect": "deny",
+      "constraints": [
+        {"leftOperand": "recipient_type", "operator": "eq", "rightOperand": "third_party"}
+      ]
+    },
+
+    {
+      "uid": "doctor_policy_5",
+      "scenario": "Doctor can access lab results only during working hours",
+      "role": "doctor",
+      "target": "lab_results",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "time", "operator": "gte", "rightOperand": "08:00"},
+        {"leftOperand": "time", "operator": "lte", "rightOperand": "18:00"}
+      ]
+    },
+
+    {
+      "uid": "nurse_policy_1",
+      "scenario": "Nurse reads patient summary during active shift",
+      "role": "nurse",
+      "target": "patient_summary",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "shift_status", "operator": "eq", "rightOperand": "active"}
+      ],
+      "duties": [
+        {"action": "log_access"}
+      ]
+    },
+
+    {
+      "uid": "nurse_policy_2",
+      "scenario": "Nurse updates medication schedule for assigned patients",
+      "role": "nurse",
+      "target": "medication_schedule",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "assigned_patient", "operator": "eq", "rightOperand": true}
+      ]
+    },
+
+    {
+      "uid": "nurse_policy_3",
+      "scenario": "Nurse cannot edit diagnosis reports",
+      "role": "nurse",
+      "target": "diagnosis_reports",
+      "action": "edit",
+      "effect": "deny",
+      "constraints": []
+    },
+
+    {
+      "uid": "nurse_policy_4",
+      "scenario": "Nurse cannot download full patient records",
+      "role": "nurse",
+      "target": "patient_records",
+      "action": "download",
+      "effect": "deny",
+      "constraints": []
+    },
+
+    {
+      "uid": "nurse_policy_5",
+      "scenario": "Nurse updates vital signs for admitted patients",
+      "role": "nurse",
+      "target": "vital_signs",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "patient_status", "operator": "eq", "rightOperand": "admitted"}
+      ]
+    },
+
+    {
+      "uid": "patient_policy_1",
+      "scenario": "Patient reads own medical record",
+      "role": "patient",
+      "target": "own_medical_record",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "identity_verified", "operator": "eq", "rightOperand": true}
+      ]
+    },
+
+    {
+      "uid": "patient_policy_2",
+      "scenario": "Patient reads own lab results after release",
+      "role": "patient",
+      "target": "own_lab_results",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "result_status", "operator": "eq", "rightOperand": "released"}
+      ]
+    },
+
+    {
+      "uid": "patient_policy_3",
+      "scenario": "Patient updates consent preferences",
+      "role": "patient",
+      "target": "consent_preferences",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {"leftOperand": "identity_verified", "operator": "eq", "rightOperand": true}
+      ]
+    },
+
+    {
+      "uid": "patient_policy_4",
+      "scenario": "Patient cannot read other patient records",
+      "role": "patient",
+      "target": "other_patient_records",
+      "action": "read",
+      "effect": "deny",
+      "constraints": []
+    },
+
+    {
+      "uid": "patient_policy_5",
+      "scenario": "Patient reads appointment history",
+      "role": "patient",
+      "target": "appointment_history",
+      "action": "read",
+      "effect": "permit",
+      "constraints": []
+    }
+
+  ],
+
+  "full_odrl_policies": [
+
+    {
+      "@type": "Set",
+      "uid": "odrl_policy_1",
+      "permission": [
+        {
+          "target": "dataset:anonymised_cancer_data",
+          "assignee": "role:researcher",
+          "action": "read",
+          "constraint": [
+            {
+              "leftOperand": "purpose",
+              "operator": "eq",
+              "rightOperand": "medical_research"
+            },
+            {
+              "leftOperand": "spatial",
+              "operator": "eq",
+              "rightOperand": "UK"
+            }
+          ],
+          "duty": [
+            {"action": "log"}
+          ]
+        }
+      ]
+    },
+
+    {
+      "@type": "Agreement",
+      "uid": "odrl_policy_2",
+      "permission": [
+        {
+          "target": "dataset:genomics_export",
+          "assignee": "role:external_researcher",
+          "action": "export",
+          "constraint": [
+            {"leftOperand": "anonymised", "operator": "eq", "rightOperand": true},
+            {"leftOperand": "ethicsApproval", "operator": "eq", "rightOperand": true}
+          ],
+          "duty": [
+            {"action": "attribute"},
+            {"action": "log"}
+          ]
+        }
+      ]
+    },
+
+    {
+      "@type": "Agreement",
+      "uid": "odrl_policy_3",
+      "prohibition": [
+        {
+          "target": "dataset:patient_records",
+          "assignee": "role:doctor",
+          "action": "share",
+          "constraint": [
+            {
+              "leftOperand": "recipientType",
+              "operator": "eq",
+              "rightOperand": "third_party"
+            }
+          ],	
+          "remedy": [
+            {"action": "anonymise"}
+          ]
+        }
+      ]
+    },
+
+    {
+      "@type": "Set",
+      "uid": "odrl_policy_4",
+      "obligation": [
+        {
+          "target": "dataset:temporary_research_copy",
+          "assignee": "role:researcher",
+          "action": "delete",
+          "constraint": [
+            {
+              "leftOperand": "dateTime",
+              "operator": "lte",
+              "rightOperand": "2026-12-31"
+            }
+          ],
+          "consequence": [
+            {"action": "payPenalty"}
+          ]
+        }
+      ]
+    },
+
+    {
+      "@type": "Set",
+      "uid": "odrl_policy_5",
+      "permission": [
+        {
+          "target": "dataset:patient_summary",
+          "assignee": "role:nurse",
+          "action": "read",
+          "constraint": [
+            {"leftOperand": "purpose", "operator": "eq", "rightOperand": "treatment"},
+            {"leftOperand": "shiftStatus", "operator": "eq", "rightOperand": "active"}
+          ],
+          "duty": [
+            {"action": "log"}
+          ]
+        }
+      ],
+      "prohibition": [
+        {
+          "target": "dataset:patient_summary",
+          "assignee": "role:nurse",
+          "action": "download"
+        }
+      ]
+    }
+
+  ]
+}
