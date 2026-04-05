@@ -4,6 +4,7 @@ from odrl_parser import ODRLParser
 from context_provider import ContextProvider
 from logic_evaluator import LogicEvaluator
 from policy_enforcer import PolicyEnforcer
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load ODRL + Users
 parser = ODRLParser("../data/policies.json", "../data/users.json")
@@ -24,6 +25,15 @@ class EvaluationRequest(BaseModel):
     target: str
     context: dict = {}
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/users")
 def get_users():
     return users
@@ -43,12 +53,3 @@ def evaluate(req: EvaluationRequest):
         req.target,
         req.context
     )
-
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
