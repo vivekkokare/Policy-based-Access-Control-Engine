@@ -4,6 +4,7 @@ from odrl_parser import ODRLParser
 from context_provider import ContextProvider
 from logic_evaluator import LogicEvaluator
 from policy_enforcer import PolicyEnforcer
+from decision_cache import DecisionCache
 from fastapi.middleware.cors import CORSMiddleware
 
 # Load ODRL + Users
@@ -14,10 +15,11 @@ users = parser.load_users()
 # Init engine
 pip = ContextProvider(users)
 pdp = LogicEvaluator(engine_policies, full_odrl_policies)
-pep = PolicyEnforcer(pip, pdp)
-
+cache = DecisionCache(ttl_seconds=300)  # 5 minutes
+pep = PolicyEnforcer(pip, pdp, cache)
 
 app = FastAPI()
+
 
 class EvaluationRequest(BaseModel):
     user_id: str
@@ -34,9 +36,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/users")
 def get_users():
     return users
+
 
 @app.get("/policies")
 def get_policies():
@@ -44,6 +48,7 @@ def get_policies():
         "engine_policies": engine_policies,
         "full_odrl_policies": full_odrl_policies
     }
+
 
 @app.post("/evaluate")
 def evaluate(req: EvaluationRequest):
