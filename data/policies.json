@@ -1,7 +1,6 @@
 {
   "@context": "http://www.w3.org/ns/odrl.jsonld",
   "engine_policies": [
-
     {
       "uid": "doctor_policy_1",
       "scenario": "Doctor reads patient records for treatment when consent is active",
@@ -10,14 +9,23 @@
       "action": "read",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "purpose", "operator": "eq", "rightOperand": "treatment"},
-        {"leftOperand": "consent_status", "operator": "eq", "rightOperand": "active"}
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "treatment"
+        },
+        {
+          "leftOperand": "consent_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        }
       ],
       "duties": [
-        {"action": "log_access"}
+        {
+          "action": "log_access"
+        }
       ]
     },
-
     {
       "uid": "doctor_policy_2",
       "scenario": "Doctor denied access if patient consent revoked",
@@ -26,10 +34,13 @@
       "action": "read",
       "effect": "deny",
       "constraints": [
-        {"leftOperand": "consent_status", "operator": "eq", "rightOperand": "revoked"}
+        {
+          "leftOperand": "consent_status",
+          "operator": "eq",
+          "rightOperand": "revoked"
+        }
       ]
     },
-
     {
       "uid": "doctor_policy_3",
       "scenario": "Doctor exports anonymised data for research",
@@ -38,15 +49,26 @@
       "action": "export",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "purpose", "operator": "eq", "rightOperand": "medical_research"},
-        {"leftOperand": "anonymised", "operator": "eq", "rightOperand": true}
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "medical_research"
+        },
+        {
+          "leftOperand": "anonymised",
+          "operator": "eq",
+          "rightOperand": true
+        }
       ],
       "duties": [
-        {"action": "log_access"},
-        {"action": "watermark_export"}
+        {
+          "action": "log_access"
+        },
+        {
+          "action": "watermark_export"
+        }
       ]
     },
-
     {
       "uid": "doctor_policy_4",
       "scenario": "Doctor cannot share raw patient records externally",
@@ -55,10 +77,13 @@
       "action": "share",
       "effect": "deny",
       "constraints": [
-        {"leftOperand": "recipient_type", "operator": "eq", "rightOperand": "third_party"}
+        {
+          "leftOperand": "recipient_type",
+          "operator": "eq",
+          "rightOperand": "third_party"
+        }
       ]
     },
-
     {
       "uid": "doctor_policy_5",
       "scenario": "Doctor can access lab results only during working hours",
@@ -67,11 +92,18 @@
       "action": "read",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "time", "operator": "gte", "rightOperand": "08:00"},
-        {"leftOperand": "time", "operator": "lte", "rightOperand": "18:00"}
+        {
+          "leftOperand": "time",
+          "operator": "gte",
+          "rightOperand": "08:00"
+        },
+        {
+          "leftOperand": "time",
+          "operator": "lte",
+          "rightOperand": "18:00"
+        }
       ]
     },
-
     {
       "uid": "nurse_policy_1",
       "scenario": "Nurse reads patient summary during active shift",
@@ -80,13 +112,18 @@
       "action": "read",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "shift_status", "operator": "eq", "rightOperand": "active"}
+        {
+          "leftOperand": "shift_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        }
       ],
       "duties": [
-        {"action": "log_access"}
+        {
+          "action": "log_access"
+        }
       ]
     },
-
     {
       "uid": "nurse_policy_2",
       "scenario": "Nurse updates medication schedule for assigned patients",
@@ -95,10 +132,13 @@
       "action": "update",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "assigned_patient", "operator": "eq", "rightOperand": true}
+        {
+          "leftOperand": "assigned_patient",
+          "operator": "eq",
+          "rightOperand": true
+        }
       ]
     },
-
     {
       "uid": "nurse_policy_3",
       "scenario": "Nurse cannot edit diagnosis reports",
@@ -108,7 +148,6 @@
       "effect": "deny",
       "constraints": []
     },
-
     {
       "uid": "nurse_policy_4",
       "scenario": "Nurse cannot download full patient records",
@@ -118,7 +157,6 @@
       "effect": "deny",
       "constraints": []
     },
-
     {
       "uid": "nurse_policy_5",
       "scenario": "Nurse updates vital signs for admitted patients",
@@ -127,10 +165,13 @@
       "action": "update",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "patient_status", "operator": "eq", "rightOperand": "admitted"}
+        {
+          "leftOperand": "patient_status",
+          "operator": "eq",
+          "rightOperand": "admitted"
+        }
       ]
     },
-
     {
       "uid": "patient_policy_1",
       "scenario": "Patient reads own medical record",
@@ -139,10 +180,13 @@
       "action": "read",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "identity_verified", "operator": "eq", "rightOperand": true}
+        {
+          "leftOperand": "identity_verified",
+          "operator": "eq",
+          "rightOperand": true
+        }
       ]
     },
-
     {
       "uid": "patient_policy_2",
       "scenario": "Patient reads own lab results after release",
@@ -151,10 +195,13 @@
       "action": "read",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "result_status", "operator": "eq", "rightOperand": "released"}
+        {
+          "leftOperand": "result_status",
+          "operator": "eq",
+          "rightOperand": "released"
+        }
       ]
     },
-
     {
       "uid": "patient_policy_3",
       "scenario": "Patient updates consent preferences",
@@ -163,10 +210,13 @@
       "action": "update",
       "effect": "permit",
       "constraints": [
-        {"leftOperand": "identity_verified", "operator": "eq", "rightOperand": true}
+        {
+          "leftOperand": "identity_verified",
+          "operator": "eq",
+          "rightOperand": true
+        }
       ]
     },
-
     {
       "uid": "patient_policy_4",
       "scenario": "Patient cannot read other patient records",
@@ -176,7 +226,6 @@
       "effect": "deny",
       "constraints": []
     },
-
     {
       "uid": "patient_policy_5",
       "scenario": "Patient reads appointment history",
@@ -185,12 +234,834 @@
       "action": "read",
       "effect": "permit",
       "constraints": []
+    },
+    {
+      "uid": "lab_manager_policy_1",
+      "scenario": "Lab manager can read lab results for quality review",
+      "role": "lab_manager",
+      "target": "lab_results",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "employment_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "quality_review"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "lab_manager_policy_2",
+      "scenario": "Lab manager can update lab result status",
+      "role": "lab_manager",
+      "target": "lab_results",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "department",
+          "operator": "eq",
+          "rightOperand": "laboratory"
+        },
+        {
+          "leftOperand": "clearance_level",
+          "operator": "gte",
+          "rightOperand": 4
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "lab_manager_policy_3",
+      "scenario": "Lab manager cannot delete lab records",
+      "role": "lab_manager",
+      "target": "lab_results",
+      "action": "delete",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "lab_manager_policy_4",
+      "scenario": "Lab manager can export anonymised lab statistics",
+      "role": "lab_manager",
+      "target": "lab_statistics",
+      "action": "export",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "anonymised",
+          "operator": "eq",
+          "rightOperand": true
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "service_improvement"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        },
+        {
+          "action": "watermark_export"
+        }
+      ]
+    },
+    {
+      "uid": "lab_manager_policy_5",
+      "scenario": "Lab manager cannot access billing records",
+      "role": "lab_manager",
+      "target": "billing_data",
+      "action": "read",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "ward_manager_policy_1",
+      "scenario": "Ward manager can read ward patient summaries",
+      "role": "ward_manager",
+      "target": "patient_summary",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "assigned_ward",
+          "operator": "eq",
+          "rightOperand": "ward_a"
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "ward_management"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "ward_manager_policy_2",
+      "scenario": "Ward manager can update bed allocation",
+      "role": "ward_manager",
+      "target": "bed_allocation",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "employment_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        },
+        {
+          "leftOperand": "assigned_ward",
+          "operator": "eq",
+          "rightOperand": "ward_a"
+        }
+      ]
+    },
+    {
+      "uid": "ward_manager_policy_3",
+      "scenario": "Ward manager cannot edit diagnosis reports",
+      "role": "ward_manager",
+      "target": "diagnosis_reports",
+      "action": "edit",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "ward_manager_policy_4",
+      "scenario": "Ward manager can view staff shift roster",
+      "role": "ward_manager",
+      "target": "staff_roster",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "employment_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        }
+      ]
+    },
+    {
+      "uid": "ward_manager_policy_5",
+      "scenario": "Ward manager cannot download full patient records",
+      "role": "ward_manager",
+      "target": "patient_records",
+      "action": "download",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "receptionist_policy_1",
+      "scenario": "Receptionist can read appointment schedule",
+      "role": "receptionist",
+      "target": "appointment_schedule",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "employment_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        }
+      ]
+    },
+    {
+      "uid": "receptionist_policy_2",
+      "scenario": "Receptionist can update appointment booking",
+      "role": "receptionist",
+      "target": "appointment_schedule",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "department",
+          "operator": "eq",
+          "rightOperand": "front_desk"
+        },
+        {
+          "leftOperand": "identity_verified",
+          "operator": "eq",
+          "rightOperand": true
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "receptionist_policy_3",
+      "scenario": "Receptionist can read patient contact details for registration",
+      "role": "receptionist",
+      "target": "patient_contact_details",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "registration"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "receptionist_policy_4",
+      "scenario": "Receptionist cannot read diagnosis reports",
+      "role": "receptionist",
+      "target": "diagnosis_reports",
+      "action": "read",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "receptionist_policy_5",
+      "scenario": "Receptionist cannot download patient records",
+      "role": "receptionist",
+      "target": "patient_records",
+      "action": "download",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "records_officer_policy_1",
+      "scenario": "Medical records officer can read patient records for records management",
+      "role": "medical_records_officer",
+      "target": "patient_records",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "data_access_level",
+          "operator": "eq",
+          "rightOperand": "restricted"
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "records_management"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "records_officer_policy_2",
+      "scenario": "Medical records officer can update demographic record metadata",
+      "role": "medical_records_officer",
+      "target": "patient_demographics",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "department",
+          "operator": "eq",
+          "rightOperand": "records"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "records_officer_policy_3",
+      "scenario": "Medical records officer cannot edit clinical notes",
+      "role": "medical_records_officer",
+      "target": "clinical_notes",
+      "action": "edit",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "records_officer_policy_4",
+      "scenario": "Medical records officer can archive inactive records",
+      "role": "medical_records_officer",
+      "target": "inactive_patient_records",
+      "action": "archive",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "records_retention"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "records_officer_policy_5",
+      "scenario": "Medical records officer cannot share records with third parties",
+      "role": "medical_records_officer",
+      "target": "patient_records",
+      "action": "share",
+      "effect": "deny",
+      "constraints": [
+        {
+          "leftOperand": "recipient_type",
+          "operator": "eq",
+          "rightOperand": "third_party"
+        }
+      ]
+    },
+    {
+      "uid": "insurance_coordinator_policy_1",
+      "scenario": "Insurance coordinator can read billing data for claim processing",
+      "role": "insurance_coordinator",
+      "target": "billing_data",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "claim_processing",
+          "operator": "eq",
+          "rightOperand": true
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "insurance_claim"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "insurance_coordinator_policy_2",
+      "scenario": "Insurance coordinator can update claim status",
+      "role": "insurance_coordinator",
+      "target": "insurance_claims",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "department",
+          "operator": "eq",
+          "rightOperand": "insurance"
+        }
+      ]
+    },
+    {
+      "uid": "insurance_coordinator_policy_3",
+      "scenario": "Insurance coordinator cannot read full clinical notes",
+      "role": "insurance_coordinator",
+      "target": "clinical_notes",
+      "action": "read",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "insurance_coordinator_policy_4",
+      "scenario": "Insurance coordinator can read treatment summary for approved claims",
+      "role": "insurance_coordinator",
+      "target": "treatment_summary",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "claim_status",
+          "operator": "eq",
+          "rightOperand": "approved"
+        },
+        {
+          "leftOperand": "consent_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "insurance_coordinator_policy_5",
+      "scenario": "Insurance coordinator cannot export patient records",
+      "role": "insurance_coordinator",
+      "target": "patient_records",
+      "action": "export",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "pharmacy_manager_policy_1",
+      "scenario": "Pharmacy manager can read prescription records",
+      "role": "pharmacy_manager",
+      "target": "prescriptions",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "license_status",
+          "operator": "eq",
+          "rightOperand": "valid"
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "medication_dispensing"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "pharmacy_manager_policy_2",
+      "scenario": "Pharmacy manager can update medication stock",
+      "role": "pharmacy_manager",
+      "target": "medication_inventory",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "department",
+          "operator": "eq",
+          "rightOperand": "pharmacy"
+        }
+      ]
+    },
+    {
+      "uid": "pharmacy_manager_policy_3",
+      "scenario": "Pharmacy manager can approve controlled medication dispensing",
+      "role": "pharmacy_manager",
+      "target": "controlled_medication",
+      "action": "approve",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "clearance_level",
+          "operator": "gte",
+          "rightOperand": 4
+        },
+        {
+          "leftOperand": "identity_verified",
+          "operator": "eq",
+          "rightOperand": true
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "pharmacy_manager_policy_4",
+      "scenario": "Pharmacy manager cannot edit diagnosis reports",
+      "role": "pharmacy_manager",
+      "target": "diagnosis_reports",
+      "action": "edit",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "pharmacy_manager_policy_5",
+      "scenario": "Pharmacy manager cannot share prescription data externally",
+      "role": "pharmacy_manager",
+      "target": "prescriptions",
+      "action": "share",
+      "effect": "deny",
+      "constraints": [
+        {
+          "leftOperand": "recipient_type",
+          "operator": "eq",
+          "rightOperand": "third_party"
+        }
+      ]
+    },
+    {
+      "uid": "healthcare_assistant_policy_1",
+      "scenario": "Healthcare assistant can read assigned patient summary during active shift",
+      "role": "healthcare_assistant",
+      "target": "patient_summary",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "shift_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        },
+        {
+          "leftOperand": "assigned_patient",
+          "operator": "eq",
+          "rightOperand": true
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "healthcare_assistant_policy_2",
+      "scenario": "Healthcare assistant can update care observations",
+      "role": "healthcare_assistant",
+      "target": "care_observations",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "employment_status",
+          "operator": "eq",
+          "rightOperand": "active"
+        }
+      ]
+    },
+    {
+      "uid": "healthcare_assistant_policy_3",
+      "scenario": "Healthcare assistant cannot edit prescriptions",
+      "role": "healthcare_assistant",
+      "target": "prescriptions",
+      "action": "edit",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "healthcare_assistant_policy_4",
+      "scenario": "Healthcare assistant cannot read full patient records",
+      "role": "healthcare_assistant",
+      "target": "patient_records",
+      "action": "read",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "healthcare_assistant_policy_5",
+      "scenario": "Healthcare assistant cannot download any clinical records",
+      "role": "healthcare_assistant",
+      "target": "clinical_records",
+      "action": "download",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "it_support_policy_1",
+      "scenario": "IT support can read system health logs",
+      "role": "it_support",
+      "target": "system_logs",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "system_access",
+          "operator": "eq",
+          "rightOperand": "limited"
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "technical_support"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "it_support_policy_2",
+      "scenario": "IT support can update user access tickets",
+      "role": "it_support",
+      "target": "support_tickets",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "department",
+          "operator": "eq",
+          "rightOperand": "it"
+        }
+      ]
+    },
+    {
+      "uid": "it_support_policy_3",
+      "scenario": "IT support cannot read patient records",
+      "role": "it_support",
+      "target": "patient_records",
+      "action": "read",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "it_support_policy_4",
+      "scenario": "IT support cannot export clinical data",
+      "role": "it_support",
+      "target": "clinical_records",
+      "action": "export",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "it_support_policy_5",
+      "scenario": "IT support can restart system service in maintenance window",
+      "role": "it_support",
+      "target": "system_service",
+      "action": "restart",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "maintenance_window",
+          "operator": "eq",
+          "rightOperand": true
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "dietician_policy_1",
+      "scenario": "Dietician can read nutrition plan",
+      "role": "dietician",
+      "target": "nutrition_plan",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "patient_plan_access",
+          "operator": "eq",
+          "rightOperand": true
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "dietician_policy_2",
+      "scenario": "Dietician can update nutrition plan for assigned patient",
+      "role": "dietician",
+      "target": "nutrition_plan",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "assigned_patient",
+          "operator": "eq",
+          "rightOperand": true
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "care_planning"
+        }
+      ]
+    },
+    {
+      "uid": "dietician_policy_3",
+      "scenario": "Dietician can read allergy information",
+      "role": "dietician",
+      "target": "allergy_information",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "nutrition_care"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "dietician_policy_4",
+      "scenario": "Dietician cannot read diagnosis reports",
+      "role": "dietician",
+      "target": "diagnosis_reports",
+      "action": "read",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "dietician_policy_5",
+      "scenario": "Dietician cannot prescribe medication",
+      "role": "dietician",
+      "target": "prescriptions",
+      "action": "create",
+      "effect": "deny",
+      "constraints": []
+    },
+    {
+      "uid": "paramedic_policy_1",
+      "scenario": "Paramedic can read emergency patient summary",
+      "role": "paramedic",
+      "target": "emergency_patient_summary",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "emergency_access",
+          "operator": "eq",
+          "rightOperand": true
+        },
+        {
+          "leftOperand": "purpose",
+          "operator": "eq",
+          "rightOperand": "emergency_care"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "paramedic_policy_2",
+      "scenario": "Paramedic can update emergency incident notes",
+      "role": "paramedic",
+      "target": "emergency_incident_notes",
+      "action": "update",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "department",
+          "operator": "eq",
+          "rightOperand": "emergency"
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "paramedic_policy_3",
+      "scenario": "Paramedic can read allergy and medication summary during emergency",
+      "role": "paramedic",
+      "target": "allergy_medication_summary",
+      "action": "read",
+      "effect": "permit",
+      "constraints": [
+        {
+          "leftOperand": "emergency",
+          "operator": "eq",
+          "rightOperand": true
+        }
+      ],
+      "duties": [
+        {
+          "action": "log_access"
+        }
+      ]
+    },
+    {
+      "uid": "paramedic_policy_4",
+      "scenario": "Paramedic cannot read full historical patient records",
+      "role": "paramedic",
+      "target": "patient_records",
+      "action": "read",
+      "effect": "deny",
+      "constraints": [
+        {
+          "leftOperand": "emergency",
+          "operator": "eq",
+          "rightOperand": false
+        }
+      ]
+    },
+    {
+      "uid": "paramedic_policy_5",
+      "scenario": "Paramedic cannot export patient records",
+      "role": "paramedic",
+      "target": "patient_records",
+      "action": "export",
+      "effect": "deny",
+      "constraints": []
     }
-
   ],
-
   "full_odrl_policies": [
-
     {
       "@type": "Set",
       "uid": "odrl_policy_1",
@@ -212,12 +1083,13 @@
             }
           ],
           "duty": [
-            {"action": "log"}
+            {
+              "action": "log"
+            }
           ]
         }
       ]
     },
-
     {
       "@type": "Agreement",
       "uid": "odrl_policy_2",
@@ -227,17 +1099,28 @@
           "assignee": "role:external_researcher",
           "action": "export",
           "constraint": [
-            {"leftOperand": "anonymised", "operator": "eq", "rightOperand": true},
-            {"leftOperand": "ethicsApproval", "operator": "eq", "rightOperand": true}
+            {
+              "leftOperand": "anonymised",
+              "operator": "eq",
+              "rightOperand": true
+            },
+            {
+              "leftOperand": "ethicsApproval",
+              "operator": "eq",
+              "rightOperand": true
+            }
           ],
           "duty": [
-            {"action": "attribute"},
-            {"action": "log"}
+            {
+              "action": "attribute"
+            },
+            {
+              "action": "log"
+            }
           ]
         }
       ]
     },
-
     {
       "@type": "Agreement",
       "uid": "odrl_policy_3",
@@ -252,14 +1135,15 @@
               "operator": "eq",
               "rightOperand": "third_party"
             }
-          ],	
+          ],
           "remedy": [
-            {"action": "anonymise"}
+            {
+              "action": "anonymise"
+            }
           ]
         }
       ]
     },
-
     {
       "@type": "Set",
       "uid": "odrl_policy_4",
@@ -276,12 +1160,13 @@
             }
           ],
           "consequence": [
-            {"action": "payPenalty"}
+            {
+              "action": "payPenalty"
+            }
           ]
         }
       ]
     },
-
     {
       "@type": "Set",
       "uid": "odrl_policy_5",
@@ -291,11 +1176,21 @@
           "assignee": "role:nurse",
           "action": "read",
           "constraint": [
-            {"leftOperand": "purpose", "operator": "eq", "rightOperand": "treatment"},
-            {"leftOperand": "shiftStatus", "operator": "eq", "rightOperand": "active"}
+            {
+              "leftOperand": "purpose",
+              "operator": "eq",
+              "rightOperand": "treatment"
+            },
+            {
+              "leftOperand": "shiftStatus",
+              "operator": "eq",
+              "rightOperand": "active"
+            }
           ],
           "duty": [
-            {"action": "log"}
+            {
+              "action": "log"
+            }
           ]
         }
       ],
@@ -307,6 +1202,5 @@
         }
       ]
     }
-
   ]
 }
