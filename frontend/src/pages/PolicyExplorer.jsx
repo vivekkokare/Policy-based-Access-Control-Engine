@@ -47,7 +47,12 @@ export default function PolicyExplorer() {
       <Stack spacing={6}>
         <Flex justify="space-between" align={{ base: "start", md: "center" }} direction={{ base: "column", md: "row" }} gap={4}>
           <Box>
-            <Heading size="lg">Policy Explorer</Heading>
+            <HStack spacing={3} align="center" flexWrap="wrap">
+              <Heading size="lg">Policy Explorer</Heading>
+              <Badge colorScheme="teal" px={3} py={1} borderRadius="full">
+                {policies.length} {policies.length === 1 ? "policy" : "policies"}
+              </Badge>
+            </HStack>
             <Text color="gray.600" mt={1}>
               Review engine-ready policies, constraints, duties, and expected access outcomes.
             </Text>
@@ -72,6 +77,17 @@ export default function PolicyExplorer() {
             </Select>
           </HStack>
         </Flex>
+
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+          <Box bg="white" p={5} borderRadius="2xl" boxShadow="sm" border="1px solid" borderColor="gray.100">
+            <Text color="gray.500" fontSize="sm">Total Policies</Text>
+            <Heading size="lg" mt={1}>{policies.length}</Heading>
+          </Box>
+          <Box bg="white" p={5} borderRadius="2xl" boxShadow="sm" border="1px solid" borderColor="gray.100">
+            <Text color="gray.500" fontSize="sm">Visible Results</Text>
+            <Heading size="lg" mt={1}>{filteredPolicies.length}</Heading>
+          </Box>
+        </SimpleGrid>
 
         {loading ? (
           <Flex justify="center" py={20}>

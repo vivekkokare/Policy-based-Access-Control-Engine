@@ -17,7 +17,6 @@ import {
   GridItem,
   Heading,
   HStack,
-  Input,
   Select,
   Stack,
   Text,
@@ -156,6 +155,7 @@ function getDuties(result) {
 
 export default function PdpTest() {
   const [users, setUsers] = useState([]);
+  const [policies, setPolicies] = useState([]);
   const [userId, setUserId] = useState("");
   const [action, setAction] = useState("");
   const [target, setTarget] = useState("");
@@ -167,12 +167,33 @@ export default function PdpTest() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.getUsers().then((res) => setUsers(res.data));
+    Promise.all([api.getUsers(), api.getPolicies()]).then(([usersRes, policiesRes]) => {
+      setUsers(usersRes.data);
+      setPolicies(policiesRes.data.engine_policies || []);
+    });
   }, []);
 
   const selectedUser = useMemo(() => {
     return users.find((u) => u.user_id === userId);
   }, [users, userId]);
+
+  const actionOptions = useMemo(() => {
+    const values = [
+      ...policies.map((policy) => policy.action),
+      ...presets.map((preset) => preset.action),
+    ].filter(Boolean);
+
+    return [...new Set(values)].sort();
+  }, [policies]);
+
+  const targetOptions = useMemo(() => {
+    const values = [
+      ...policies.map((policy) => policy.target),
+      ...presets.map((preset) => preset.target),
+    ].filter(Boolean);
+
+    return [...new Set(values)].sort();
+  }, [policies]);
 
   const applyPreset = (preset) => {
     setUserId(preset.user_id);
@@ -192,13 +213,13 @@ export default function PdpTest() {
       return;
     }
 
-    if (!action.trim()) {
-      setError("Please enter an action, for example read, update, export, or download.");
+    if (!action) {
+      setError("Please select an action before evaluating the request.");
       return;
     }
 
-    if (!target.trim()) {
-      setError("Please enter a target, for example patient_records or lab_results.");
+    if (!target) {
+      setError("Please select a target before evaluating the request.");
       return;
     }
 
@@ -209,8 +230,8 @@ export default function PdpTest() {
 
       const res = await api.evaluate({
         user_id: userId,
-        action: action.trim(),
-        target: target.trim(),
+        action,
+        target,
         context: ctxObj,
       });
 
@@ -314,22 +335,34 @@ export default function PdpTest() {
                   <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
                     <FormControl isRequired>
                       <FormLabel>Action</FormLabel>
-                      <Input
-                        placeholder="e.g. read"
+                      <Select
                         value={action}
                         onChange={(e) => setAction(e.target.value)}
                         bg="white"
-                      />
+                      >
+                        <option value="">Select action</option>
+                        {actionOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </Select>
                     </FormControl>
 
                     <FormControl isRequired>
                       <FormLabel>Target</FormLabel>
-                      <Input
-                        placeholder="e.g. patient_records"
+                      <Select
                         value={target}
                         onChange={(e) => setTarget(e.target.value)}
                         bg="white"
-                      />
+                      >
+                        <option value="">Select target</option>
+                        {targetOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </Select>
                     </FormControl>
                   </Grid>
 
