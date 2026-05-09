@@ -105,6 +105,36 @@
       ]
     },
     {
+  "uid": "doctor_policy_6",
+  "scenario": "Doctor is denied access to lab results before working hours",
+  "role": "doctor",
+  "target": "lab_results",
+  "action": "read",
+  "effect": "deny",
+  "constraints": [
+    {
+      "leftOperand": "time",
+      "operator": "lt",
+      "rightOperand": "08:00"
+    }
+  ]
+},
+{
+  "uid": "doctor_policy_7",
+  "scenario": "Doctor is denied access to lab results after working hours",
+  "role": "doctor",
+  "target": "lab_results",
+  "action": "read",
+  "effect": "deny",
+  "constraints": [
+    {
+      "leftOperand": "time",
+      "operator": "gt",
+      "rightOperand": "18:00"
+    }
+  ]
+},
+    {
       "uid": "nurse_policy_1",
       "scenario": "Nurse reads patient summary during active shift",
       "role": "nurse",
