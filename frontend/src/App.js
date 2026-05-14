@@ -1,3 +1,6 @@
+// Main App Component - Navigation and Routing
+// Provides navigation between pages: Users, Policies, and PDP Test
+
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import UserExplorer from "./pages/UserExplorer";
 import PolicyExplorer from "./pages/PolicyExplorer";
@@ -17,6 +20,8 @@ import {
 } from "@chakra-ui/react";
 import { FiUsers, FiShield, FiDatabase, FiCheckCircle } from "react-icons/fi";
 
+// Navigation Button Component
+// Highlights the current page and links to other sections
 function NavButton({ to, children }) {
   const location = useLocation();
   const active = location.pathname === to;
@@ -40,10 +45,13 @@ function NavButton({ to, children }) {
   );
 }
 
+// Home Page Component
+// Landing page with application overview and feature highlights
 function HomePage() {
   return (
     <Container maxW="1200px" py={10}>
       <Stack spacing={8}>
+        {/* Hero Section */}
         <Box
           bgGradient="linear(to-r, teal.600, cyan.500)"
           color="white"
@@ -104,7 +112,9 @@ function HomePage() {
           </Stack>
         </Box>
 
+        {/* Feature Cards */}
         <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={6}>
+          {/* Users Card */}
           <Box bg="white" p={6} borderRadius="2xl" boxShadow="md" border="1px solid" borderColor="gray.100">
             <HStack mb={3}>
               <Icon as={FiUsers} boxSize={5} color="teal.500" />
@@ -115,6 +125,7 @@ function HomePage() {
             </Text>
           </Box>
 
+          {/* Policies Card */}
           <Box bg="white" p={6} borderRadius="2xl" boxShadow="md" border="1px solid" borderColor="gray.100">
             <HStack mb={3}>
               <Icon as={FiShield} boxSize={5} color="teal.500" />
@@ -125,6 +136,7 @@ function HomePage() {
             </Text>
           </Box>
 
+          {/* Context Card */}
           <Box bg="white" p={6} borderRadius="2xl" boxShadow="md" border="1px solid" borderColor="gray.100">
             <HStack mb={3}>
               <Icon as={FiDatabase} boxSize={5} color="teal.500" />
@@ -135,6 +147,7 @@ function HomePage() {
             </Text>
           </Box>
 
+          {/* PDP Testing Card */}
           <Box bg="white" p={6} borderRadius="2xl" boxShadow="md" border="1px solid" borderColor="gray.100">
             <HStack mb={3}>
               <Icon as={FiCheckCircle} boxSize={5} color="teal.500" />

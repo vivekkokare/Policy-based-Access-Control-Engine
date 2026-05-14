@@ -1,3 +1,6 @@
+// User Explorer Page
+// Display, search, and filter all users in the system
+
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../api/api";
 import {
@@ -18,29 +21,35 @@ import {
 } from "@chakra-ui/react";
 
 export default function UserExplorer() {
+  // State for users, search, and filters
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all"); // filter by role
   const [loading, setLoading] = useState(true);
 
+  // Fetch users on component mount
   useEffect(() => {
     api.getUsers()
       .then((res) => setUsers(res.data))
       .finally(() => setLoading(false));
   }, []);
 
+  // Extract unique roles from users for filter dropdown
   const roles = useMemo(() => {
     const unique = [...new Set(users.map((u) => u.role).filter(Boolean))];
     return unique.sort();
   }, [users]);
 
+  // Memoized filtered users based on search and role filters
   const filteredUsers = useMemo(() => {
     return users.filter((u) => {
+      // Search across user fields
       const matchesSearch =
         u.name?.toLowerCase().includes(search.toLowerCase()) ||
         u.user_id?.toLowerCase().includes(search.toLowerCase()) ||
         u.organisation?.toLowerCase().includes(search.toLowerCase());
 
+      // Filter by user role
       const matchesRole = roleFilter === "all" || u.role === roleFilter;
 
       return matchesSearch && matchesRole;
@@ -50,6 +59,7 @@ export default function UserExplorer() {
   return (
     <Container maxW="1200px" py={10}>
       <Stack spacing={6}>
+        {/* Header with title and filters */}
         <Flex justify="space-between" align={{ base: "start", md: "center" }} direction={{ base: "column", md: "row" }} gap={4}>
           <Box>
             <Heading size="lg">User Explorer</Heading>
@@ -58,6 +68,7 @@ export default function UserExplorer() {
             </Text>
           </Box>
 
+          {/* Search and filter controls */}
           <HStack spacing={3} w={{ base: "100%", md: "auto" }}>
             <Input
               placeholder="Search by name, ID, or organisation"
@@ -81,6 +92,7 @@ export default function UserExplorer() {
           </HStack>
         </Flex>
 
+        {/* Statistics cards */}
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
           <Box bg="white" p={5} borderRadius="2xl" boxShadow="sm" border="1px solid" borderColor="gray.100">
             <Text color="gray.500" fontSize="sm">Total Users</Text>
@@ -96,6 +108,7 @@ export default function UserExplorer() {
           </Box>
         </SimpleGrid>
 
+        {/* Loading spinner or user list */}
         {loading ? (
           <Flex justify="center" py={20}>
             <Spinner size="xl" color="teal.500" />

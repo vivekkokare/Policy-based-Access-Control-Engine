@@ -1,3 +1,6 @@
+// PDP Test Console Page
+// Interactive interface to test policy decisions with various users, actions, targets, and context
+
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../api/api";
 import {
@@ -23,17 +26,21 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 
+// Sample context values for quick testing
 const sampleContexts = {
+  // Context that should result in PERMIT
   permitRead: {
     purpose: "treatment",
     consent_status: "active",
   },
+  // Context that should result in DENY
   denyRead: {
     purpose: "treatment",
     consent_status: "revoked",
   },
 };
 
+// Pre-defined test scenarios for easy demonstration
 const presets = [
   {
     label: "Doctor treatment access",
@@ -93,6 +100,7 @@ const presets = [
   },
 ];
 
+// Helper function to construct a human-readable explanation of the decision
 function buildFallbackReason(result, selectedUser, action, target) {
   if (!result) return "";
 
@@ -125,6 +133,7 @@ function buildFallbackReason(result, selectedUser, action, target) {
   return "Decision returned by the policy engine.";
 }
 
+// Helper function to extract the applied policy identifier from result
 function getAppliedPolicy(result) {
   return (
     result?.matched_policy_uid ||
@@ -135,6 +144,7 @@ function getAppliedPolicy(result) {
   );
 }
 
+// Helper function to extract post-decision obligations (duties) from result
 function getDuties(result) {
   if (!result) return [];
 
@@ -153,7 +163,9 @@ function getDuties(result) {
   return [];
 }
 
+// Main PDP Test Console Component
 export default function PdpTest() {
+  // State management for form inputs
   const [users, setUsers] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [userId, setUserId] = useState("");
@@ -162,10 +174,13 @@ export default function PdpTest() {
   const [context, setContext] = useState(
     JSON.stringify(sampleContexts.permitRead, null, 2)
   );
+  
+  // State for evaluation result and error handling
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Fetch users and policies on component mount
   useEffect(() => {
     Promise.all([api.getUsers(), api.getPolicies()]).then(([usersRes, policiesRes]) => {
       setUsers(usersRes.data);
@@ -173,10 +188,12 @@ export default function PdpTest() {
     });
   }, []);
 
+  // Get the currently selected user object
   const selectedUser = useMemo(() => {
     return users.find((u) => u.user_id === userId);
   }, [users, userId]);
 
+  // Derive available actions from policies and presets (for dropdown)
   const actionOptions = useMemo(() => {
     const values = [
       ...policies.map((policy) => policy.action),
@@ -186,6 +203,7 @@ export default function PdpTest() {
     return [...new Set(values)].sort();
   }, [policies]);
 
+  // Derive available targets from policies and presets (for dropdown)
   const targetOptions = useMemo(() => {
     const values = [
       ...policies.map((policy) => policy.target),
@@ -195,19 +213,22 @@ export default function PdpTest() {
     return [...new Set(values)].sort();
   }, [policies]);
 
+  // Load a preset scenario into the form
   const applyPreset = (preset) => {
     setUserId(preset.user_id);
     setAction(preset.action);
     setTarget(preset.target);
     setContext(JSON.stringify(preset.context, null, 2));
-    setResult(null);
-    setError("");
+    setResult(null);  // Clear previous result
+    setError("");     // Clear previous error
   };
 
+  // Send evaluation request to backend PDP
   const evaluate = async () => {
     setError("");
     setResult(null);
 
+    // Validate required fields
     if (!userId) {
       setError("Please select a user before evaluating the request.");
       return;
@@ -226,8 +247,10 @@ export default function PdpTest() {
     setLoading(true);
 
     try {
+      // Parse context JSON
       const ctxObj = JSON.parse(context);
 
+      // Call backend API
       const res = await api.evaluate({
         user_id: userId,
         action,
@@ -237,9 +260,11 @@ export default function PdpTest() {
 
       setResult(res.data);
     } catch (err) {
+      // Handle JSON parsing errors
       if (err instanceof SyntaxError) {
         setError("Context JSON is invalid. Please fix the formatting and try again.");
       } else {
+        // Handle API errors
         setError("Evaluation failed. Check the backend and request values.");
         setResult({
           error: "Evaluation failed",

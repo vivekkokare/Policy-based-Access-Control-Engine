@@ -1,3 +1,6 @@
+// Policy Explorer Page
+// Display, search, and filter all access control policies
+
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../api/api";
 import {
@@ -16,19 +19,23 @@ import {
 } from "@chakra-ui/react";
 
 export default function PolicyExplorer() {
+  // State for policies, search, and filters
   const [policies, setPolicies] = useState([]);
   const [search, setSearch] = useState("");
-  const [effectFilter, setEffectFilter] = useState("all");
+  const [effectFilter, setEffectFilter] = useState("all"); // permit, deny, or all
   const [loading, setLoading] = useState(true);
 
+  // Fetch policies on component mount
   useEffect(() => {
     api.getPolicies()
       .then((res) => setPolicies(res.data.engine_policies || []))
       .finally(() => setLoading(false));
   }, []);
 
+  // Memoized filtered policies based on search and effect filters
   const filteredPolicies = useMemo(() => {
     return policies.filter((p) => {
+      // Search across policy fields
       const matchesSearch =
         p.uid?.toLowerCase().includes(search.toLowerCase()) ||
         p.role?.toLowerCase().includes(search.toLowerCase()) ||
@@ -36,6 +43,7 @@ export default function PolicyExplorer() {
         p.target?.toLowerCase().includes(search.toLowerCase()) ||
         p.scenario?.toLowerCase().includes(search.toLowerCase());
 
+      // Filter by policy effect (permit/deny)
       const matchesEffect = effectFilter === "all" || p.effect === effectFilter;
 
       return matchesSearch && matchesEffect;
@@ -45,6 +53,7 @@ export default function PolicyExplorer() {
   return (
     <Container maxW="1200px" py={10}>
       <Stack spacing={6}>
+        {/* Header with title and filters */}
         <Flex justify="space-between" align={{ base: "start", md: "center" }} direction={{ base: "column", md: "row" }} gap={4}>
           <Box>
             <HStack spacing={3} align="center" flexWrap="wrap">
@@ -58,6 +67,7 @@ export default function PolicyExplorer() {
             </Text>
           </Box>
 
+          {/* Search and filter controls */}
           <HStack spacing={3} w={{ base: "100%", md: "auto" }}>
             <Input
               placeholder="Search policies"
@@ -78,6 +88,7 @@ export default function PolicyExplorer() {
           </HStack>
         </Flex>
 
+        {/* Statistics cards */}
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
           <Box bg="white" p={5} borderRadius="2xl" boxShadow="sm" border="1px solid" borderColor="gray.100">
             <Text color="gray.500" fontSize="sm">Total Policies</Text>
@@ -89,6 +100,7 @@ export default function PolicyExplorer() {
           </Box>
         </SimpleGrid>
 
+        {/* Loading spinner or policy list */}
         {loading ? (
           <Flex justify="center" py={20}>
             <Spinner size="xl" color="teal.500" />
